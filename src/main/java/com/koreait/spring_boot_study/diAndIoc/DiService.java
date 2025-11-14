@@ -13,7 +13,7 @@ public class DiService {
         this.diRepository = diRepository;
     }
 
-    // getInstance를 호출쪽에서 DiRepo- 를 주입
+    // getInstance 호출쪽에서 DiRepo- 를 주입
     public static DiService getInstance(DiRepository diRepository) {
         if(instance == null) {
             instance = new DiService(diRepository);
