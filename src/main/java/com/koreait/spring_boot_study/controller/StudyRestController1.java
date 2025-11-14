@@ -119,8 +119,6 @@ public class StudyRestController1 {
         log.info("들어온 데이터: {}", student);
         return "성공";
     }
-    
-    
 
 
 }
