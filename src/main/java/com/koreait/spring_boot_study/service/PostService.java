@@ -1,6 +1,9 @@
 package com.koreait.spring_boot_study.service;
 
+import com.koreait.spring_boot_study.dto.AddPostReqDto;
+import com.koreait.spring_boot_study.dto.PostResDto;
 import com.koreait.spring_boot_study.entity.Post;
+import com.koreait.spring_boot_study.exception.PostInsertException;
 import com.koreait.spring_boot_study.exception.PostNotFoundException;
 import com.koreait.spring_boot_study.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +43,34 @@ public class PostService {
         );
         String title = post.getTitle();
         return title;
+    }
+
+    // 게시글 전체 리턴
+    public List<PostResDto> getAllPost() {
+        return postRepository.findAllPosts() // List<Post>
+                .stream()
+                .map(post
+                        -> new PostResDto(post.getTitle()
+                        , post.getContent())) // Stream<PostResDto>
+                .collect(Collectors.toList()); // List<PostResDto>
+    }
+
+    // 게시글 단건 조회
+    public PostResDto getPostById(int id) {
+        Post post = postRepository.findPostById(id) // Optional<Post>
+                .orElseThrow(
+                        () -> new PostNotFoundException("게시글을 찾을 수 없습니다.")
+                );
+        return new PostResDto(post.getTitle(), post.getContent());
+    }
+
+    public void addPost(AddPostReqDto dto) {
+        int successCount = postRepository
+                .insertPost(dto.getTitle(), dto.getContent());
+
+        if(successCount <= 0) {
+            throw new PostInsertException("게시글 등록 중 에러가 발생했습니다.");
+        }
     }
 
 }

@@ -2,6 +2,7 @@ package com.koreait.spring_boot_study.controller;
 
 import com.koreait.spring_boot_study.dto.AddProductReqDto;
 import com.koreait.spring_boot_study.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,12 +34,14 @@ public class ProductController {
     // db에 추가 -> Post
     @PostMapping("/add")
     public ResponseEntity<?> postProduct(
-            @RequestBody AddProductReqDto dto
+           @Valid @RequestBody AddProductReqDto dto
     ) {
         productService.addProduct(dto);
         return ResponseEntity
                 .status(HttpStatus.CREATED) // 201
                 .body("성공");
     }
+
+
 
 }
