@@ -1,12 +1,11 @@
 package com.koreait.spring_boot_study.controller;
 
+import com.koreait.spring_boot_study.dto.AddProductReqDto;
 import com.koreait.spring_boot_study.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/product")
@@ -29,6 +28,17 @@ public class ProductController {
     @GetMapping("/name/{id}")
     public ResponseEntity<?> getProductName(@PathVariable int id) {
         return ResponseEntity.ok(productService.getProductNameById(id));
+    }
+
+    // db에 추가 -> Post
+    @PostMapping("/add")
+    public ResponseEntity<?> postProduct(
+            @RequestBody AddProductReqDto dto
+    ) {
+        productService.addProduct(dto);
+        return ResponseEntity
+                .status(HttpStatus.CREATED) // 201
+                .body("성공");
     }
 
 }

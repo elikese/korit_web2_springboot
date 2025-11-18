@@ -1,6 +1,8 @@
 package com.koreait.spring_boot_study.service;
 
+import com.koreait.spring_boot_study.dto.AddProductReqDto;
 import com.koreait.spring_boot_study.entity.Product;
+import com.koreait.spring_boot_study.exception.ProductInsertException;
 import com.koreait.spring_boot_study.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,6 +41,16 @@ public class ProductService {
     public String getProductNameById(int id) {
         String targetName = productRepository.findProductNameById(id);
         return targetName;
+    }
+
+    // 3. 상품추가(등록)
+    public void addProduct(AddProductReqDto dto) {
+        int successCount = productRepository
+                .insertProduct(dto.getName(), dto.getPrice());
+
+        if(successCount <= 0) {
+            throw new ProductInsertException("상품등록 중 문제가 생겼습니다.");
+        }
     }
 
 

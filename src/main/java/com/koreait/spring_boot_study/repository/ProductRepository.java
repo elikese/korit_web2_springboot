@@ -49,6 +49,27 @@ public class ProductRepository {
         return targetName;
     }
 
+    // 상품 추가
+    public int insertProduct(String name, int price) {
+        // id 최댓값 추적
+        int maxId = products.stream()
+                .map(product -> product.getId())
+                .max((id1, id2) -> id1 - id2)
+                .get();
+
+        // for문 사용
+        int maxId2 = 0;
+        for (Product product : products) { // product 하나씩 꺼내옴
+            if(product.getId() > maxId2) { // 비교
+                maxId2 = product.getId(); // 꺼내온값이 크면 그것으로 업데이트
+            }
+        }
+
+        Product product = new Product(maxId + 1, name, price);
+        products.add(product);
+        return 1; // 한줄추가 -> 1 리턴, n줄 추가 -> n리턴
+    }
+
 
 
 }

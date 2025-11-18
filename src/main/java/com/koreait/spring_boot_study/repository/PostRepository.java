@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class PostRepository {
@@ -20,7 +21,18 @@ public class PostRepository {
             )
     );
 
-    // 전체게시글 조회 구현
-    // 게시글 단건 조회 구현
+    // 전체게시글 조회 구현, 글제목 조회
+    public List<Post> findAllPosts() {
+        return posts;
+    }
+
+    // 게시글 단건 조회 구현, 글제목 조회
+    public Optional<Post> findPostById(int id) {
+        return posts.stream()
+                .filter(post -> post.getId() == id)
+                .findFirst(); 
+        // 객체가 있으면 객체를 Optional로 감싸서 리턴
+        // 없으면 null을 Optional로 감싸서 리턴
+    }
 
 }
