@@ -53,5 +53,9 @@ public class ProductService {
         }
     }
 
+    // 4. 상품삭제
+    public void removeProduct(int id) {
+
+    }
 
 }

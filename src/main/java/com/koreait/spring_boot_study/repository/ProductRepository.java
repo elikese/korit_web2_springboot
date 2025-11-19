@@ -1,6 +1,7 @@
 package com.koreait.spring_boot_study.repository;
 
 import com.koreait.spring_boot_study.entity.Product;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Repository
 public class ProductRepository {
     // DB 대용
@@ -69,6 +71,28 @@ public class ProductRepository {
         products.add(product);
         return 1; // 한줄추가 -> 1 리턴, n줄 추가 -> n리턴
     }
+
+    // 단건 삭제
+    // id를 통해서 단건을 삭제하는 메서드
+    public int deleteProductById(int id) {
+        // 매개변수로 들어온 id가 유효한지?
+        // 유효하지 않으면 -> 0을 리턴
+        Optional<Product> target = products.stream()
+                .filter(product -> product.getId() == id)
+                .findFirst(); // 매칭되는 첫번째 데이터를 옵셔널에 포장해서 들고오세요
+
+        if(target.isEmpty()) { // 찾은 optional을 언패킹했더니 null이라면
+            return 0;
+        }
+        // 코드가 진행이 된다는 것은 -> if문에 걸리지 않은것
+        // 옵셔널을 언패킹
+        Product product = target.get();
+        // 제거
+        products.remove(product);
+        log.info("상품삭제완료: {}", product);
+        return 1;
+    }
+
 
 
 

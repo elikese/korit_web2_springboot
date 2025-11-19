@@ -61,7 +61,6 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.CREATED).body("등록성공");
     }
 
-    // 4. 게시글 title, content를 담은 List 응답
 
 
 }

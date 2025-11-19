@@ -55,6 +55,7 @@ public class GlobalExceptionHandler {
                 .body(e.getMessage());
     }
 
+
     // validation 예외처리 핸들러(추가, 수정) - 400
     // validation에 실패하면 MethodArgumentNotValidException을 던지게 됨
     @ExceptionHandler(MethodArgumentNotValidException.class)
