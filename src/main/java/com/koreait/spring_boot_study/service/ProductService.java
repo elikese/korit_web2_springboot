@@ -3,6 +3,7 @@ package com.koreait.spring_boot_study.service;
 import com.koreait.spring_boot_study.dto.AddProductReqDto;
 import com.koreait.spring_boot_study.entity.Product;
 import com.koreait.spring_boot_study.exception.ProductInsertException;
+import com.koreait.spring_boot_study.exception.ProductNotFoundException;
 import com.koreait.spring_boot_study.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,7 +56,10 @@ public class ProductService {
 
     // 4. 상품삭제
     public void removeProduct(int id) {
-
+        int successCount = productRepository.deleteProductById(id);
+        if(successCount <= 0) {
+            throw new ProductNotFoundException("해당 상품은 존재하지 않습니다.");
+        }
     }
 
 }

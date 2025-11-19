@@ -42,6 +42,13 @@ public class ProductController {
                 .body("성공");
     }
 
+    // localhost:8080/product/1 - DELETE
+    // DELETE 요청은 body를 포함할 수 있지만, 잘 사용하지 않는다.
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteProduct(@PathVariable int id) {
+        productService.removeProduct(id);
+        return ResponseEntity.ok("삭제 완료");
+    }
 
 
 
