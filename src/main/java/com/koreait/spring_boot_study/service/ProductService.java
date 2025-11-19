@@ -1,6 +1,7 @@
 package com.koreait.spring_boot_study.service;
 
 import com.koreait.spring_boot_study.dto.AddProductReqDto;
+import com.koreait.spring_boot_study.dto.ModifyProductReqDto;
 import com.koreait.spring_boot_study.entity.Product;
 import com.koreait.spring_boot_study.exception.ProductInsertException;
 import com.koreait.spring_boot_study.exception.ProductNotFoundException;
@@ -57,6 +58,15 @@ public class ProductService {
     // 4. 상품삭제
     public void removeProduct(int id) {
         int successCount = productRepository.deleteProductById(id);
+        if(successCount <= 0) {
+            throw new ProductNotFoundException("해당 상품은 존재하지 않습니다.");
+        }
+    }
+
+    // 5. 상품업데이트
+    public void modifyProduct(int id, ModifyProductReqDto dto) {
+        int successCount = productRepository
+                .updateProduct(id, dto.getName(), dto.getPrice());
         if(successCount <= 0) {
             throw new ProductNotFoundException("해당 상품은 존재하지 않습니다.");
         }

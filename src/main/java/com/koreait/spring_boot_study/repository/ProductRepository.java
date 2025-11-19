@@ -92,7 +92,33 @@ public class ProductRepository {
         log.info("상품삭제완료: {}", product);
         return 1;
     }
+    
+    // 단건 업데이트
+    public int updateProduct(int id, String name, int price) {
+        // 매개변수로 들어온 id가 유효한 id인지
+        Product target = null;
+        for(Product product: products) {
+            if(product.getId() == id) { // 매개변수로 들어온 id와 같다면
+                target = product; // target을 업데이트
+                break;
+            }
+        }
+        if (target == null) { // target이 업데이트가 안되었다면
+            // id는 유효하지 않는것!
+            return 0; // 업데이트 0건 했어요
+        }
 
+        // List 업데이트
+        // 리스트.set(index, 저장할데이터)
+        // 리스트.indexOf(데이터) -> 해당 데이터의 index 번호를 리턴
+        int index = products.indexOf(target);
+        // entity 형태로 데이터베이스에 저장
+        Product newProduct = new Product(id, name, price);
+        // target이 있던자리에 newProduct가 저장됨
+        products.set(index, newProduct);
+
+        return 1;
+    }
 
 
 
