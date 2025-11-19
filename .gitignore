@@ -4,6 +4,9 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+### SECRET ###
+src/main/resources/application-secret.yaml
+
 ### STS ###
 .apt_generated
 .classpath

@@ -1,6 +1,7 @@
 package com.koreait.spring_boot_study.controller;
 
 import com.koreait.spring_boot_study.dto.AddProductReqDto;
+import com.koreait.spring_boot_study.dto.ModifyProductReqDto;
 import com.koreait.spring_boot_study.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,30 @@ public class ProductController {
     public ResponseEntity<?> deleteProduct(@PathVariable int id) {
         productService.removeProduct(id);
         return ResponseEntity.ok("삭제 완료");
+    }
+
+    // 왜 RequestBody로 id까지 전달받지 않고,
+    // 굳이 PathVariable로 id는 따로 받아오나요?
+    // -> RESTful 설계: URL과 요청 Method만으로도 뭐하는지 예측할 수 있다.
+    // localhost:8080/product/1 PUT -> product에 1번 자원을 수정하는 것
+    /*
+    {
+        "name" : "무선마우스",
+        "price" : 10000
+    }
+    {
+        "name" : " ",
+        "price" : 500
+    }
+    */
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> putProduct(
+            @PathVariable int id,
+            @Valid @RequestBody ModifyProductReqDto dto
+    ) {
+        productService.modifyProduct(id, dto);
+        return ResponseEntity.ok("수정완료");
     }
 
 

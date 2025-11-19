@@ -50,6 +50,44 @@ public class PostRepository {
         return 1;
     }
 
+    // 단건 삭제 by id
+    public int deletePostById(int id) {
+        // id가 검증이안되면 return 0
+        // Optional<> -> 코드를 선언하는 쪽에서 타입을 지정하겠다 : 제네릭
+        // class Box<T> { private T data; }
+        Optional<Post> target = posts.stream()
+                .filter(p -> p.getId() == id)
+                .findFirst();
+
+        if(target.isEmpty()) {
+            return 0;
+        }
+        Post post = target.get(); // 옵셔널이 가지고 있는 값 가져오기
+        posts.remove(post);
+        return 1;
+    }
+
+    // 단건 업데이트 by id and entity
+    public int updatePost(int id, String title, String content) {
+        Post target = null;
+        for(Post post : posts) {
+            if(post.getId() == id) {
+                target = post;
+                break; // findFirst()
+            }
+        }
+        if(target == null) {
+            return 0;
+        }
+
+        int index = posts.indexOf(target); // 기존 객체: target
+        // 외부에서 가져온 데이터로 객체를 새로 생성(newPost)
+        Post newPost = new Post(id, title, content);
+        // index(target이 있던자리)에 새로만든 newPost를 덮어씌워 주세요
+        posts.set(index, newPost); 
+
+        return 1;
+    }
 
 
 }
