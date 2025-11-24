@@ -58,30 +58,66 @@ select
 	*
 from
 	product
-where # =서브쿼리 -> 결과가 반드시 하나여야 한다.(limit 1)
-	product_id = ( 
-		# orders 테이블에서 가장 최근주문된 product_id
+where
+	product_id = ( # = 연산자는 매칭되는 값이 하나일때
 		select
 			product_id
 		from
 			orders
-		order by
-			order_date desc
-		limit 1
+		order by order_date desc
+        limit 1
     );
 
-# 주문이 존재하는 상품만 조회
+
+# 주문내역이 존재하는 상품만 조회
 select
 	*
 from
 	product
 where
-	product_id in (
+	product_id in ( # in 연산자는 매칭되는 값이 여러개일때
 		select
 			product_id
 		from
 			orders
     );
+
+# 주문내역이 존재하지 않는 상품들만 조회
+select
+	*
+from
+	product
+where
+	product_id not in ( # not in을 사용해서 주문된 상품 id에 없는 상품만 필터링
+		# 주문된 상품 id 목록 반환
+		select
+			product_id
+		from
+			orders
+    );
+
+# exists 연산자
+# 조건을 만족하는 첫번째 행을 발견하면 즉시 true를 반환하고 종료 -> 경우에 따라 빠름
+# 주문된 내역이 있는 상품만 조회
+select
+	*
+from
+	product p
+where
+	# 인스턴스의 id(product_id)가 주문테이블에 존재하는지 확인
+    exists ( # 행(row)의 존재여부만 판단
+		select
+			1 # 목적이 존재여부이기 때문에 반환값은 의미가 없다.
+		from
+			orders o
+		where
+			p.product_id = o.product_id
+    );
+
+
+# 실습) where 서브쿼리를 작성해서 2024년 1월에 주문된 상품들만 조회
+
+
 
 
 
