@@ -52,12 +52,12 @@
 			<optional>true</optional>
 		</dependency>
 
-		<!--DB(mysql)연결 라이브러리-->
-<!--		<dependency>-->
-<!--			<groupId>com.mysql</groupId>-->
-<!--			<artifactId>mysql-connector-j</artifactId>-->
-<!--			<scope>runtime</scope>-->
-<!--		</dependency>-->
+		<!-- DBMS(mysql)연결 라이브러리-->
+		<dependency>
+			<groupId>com.mysql</groupId>
+			<artifactId>mysql-connector-j</artifactId>
+			<scope>runtime</scope>
+		</dependency>
 
 		<!--어노테이션기반 동적코드 삽입 예) @Data, @Builder...-->
 		<dependency>
@@ -93,10 +93,11 @@
 			<version>3.5.0</version>
 		</dependency>
 
-<!--		<dependency>-->
-<!--			<groupId>org.springframework.boot</groupId>-->
-<!--			<artifactId>spring-boot-starter-jdbc</artifactId>-->
-<!--		</dependency>-->
+		<!-- jdbc : dbms와 spring-boot 서버를 연결하는 라이브러리 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jdbc</artifactId>
+		</dependency>
 
 	</dependencies>
 
