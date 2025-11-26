@@ -5,6 +5,7 @@ import com.koreait.spring_boot_study.dto.ModifyProductReqDto;
 import com.koreait.spring_boot_study.entity.Product;
 import com.koreait.spring_boot_study.exception.ProductInsertException;
 import com.koreait.spring_boot_study.exception.ProductNotFoundException;
+import com.koreait.spring_boot_study.repository.ProductJdbcRepo;
 import com.koreait.spring_boot_study.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,10 +16,11 @@ import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
-    private ProductRepository productRepository;
+    // private ProductRepository productRepository;
+    private ProductJdbcRepo productRepository;
 
     @Autowired
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductJdbcRepo productRepository) {
         this.productRepository = productRepository;
     }
 

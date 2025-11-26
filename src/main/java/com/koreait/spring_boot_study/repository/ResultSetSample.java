@@ -13,6 +13,7 @@ public class ResultSetSample {
     private int cursor = -1;
 
     // db에 저장된 컬럼명과 동일하게 필드명을 가지고 있다.
+    // -> Map 형태로 key로 컬럼명, value로 해당 row의 컬럼값을 저장하고 있음.
     private int product_id;
     private String product_name;
     private int product_price;
