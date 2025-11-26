@@ -1,7 +1,9 @@
-package com.koreait.spring_boot_study.repository;
+package com.koreait.spring_boot_study.repository.impl;
 
 import com.koreait.spring_boot_study.entity.Product;
+import com.koreait.spring_boot_study.repository.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -12,8 +14,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Qualifier("jdbc")
 @Repository
-public class ProductJdbcRepo {
+public class ProductJdbcRepo implements ProductRepo {
 
     // DB 경로 or 비밀번호와 같이 민감한 정보들을 소스코드로 노출되지 않게
     // yaml에 적어둔 DB 설정값을 스프링이 자동으로 읽어서
@@ -72,7 +75,7 @@ public class ProductJdbcRepo {
 
         } catch (SQLException e) {
             // String sql -> sql을 잘 못 작성하였거나, DB 에러처리
-            System.out.println(e.getStackTrace()); // DB에러들을 출력
+            e.printStackTrace(); // DB에러들을 출력
         } finally {
             // 에러가 일어나도, 에러가 일어나지 않아도 실행되는 코드블럭
             // 대여했던 객체들을 반납
@@ -105,7 +108,7 @@ public class ProductJdbcRepo {
             }
 
         } catch (SQLException e) {
-            System.out.println(e.getStackTrace());
+            e.printStackTrace();
         } finally {
             close(rs);
             close(ps);
@@ -113,6 +116,43 @@ public class ProductJdbcRepo {
         }
 
         return "해당 id의 상품은 존재하지 않습니다.";
+    }
+
+    @Override
+    public int insertProduct(String name, int price) {
+        String sql = "insert into product (product_name, product_price) values (?, ?)";
+        Connection conn = null;
+        PreparedStatement ps = null;
+
+        try {
+            conn = dataSource.getConnection();
+            ps = conn.prepareStatement(sql);
+
+            // sql문자열 왼쪽부터 스캔해서 1번째 나오는 ?에 매개변수 name값 주입
+            ps.setString(1, name);
+            // sql문자열 왼쪽부터 스캔해서 2번째 나오는 ?에 매개변수 price값 주입
+            ps.setInt(2, price);
+            
+            int successCount = ps.executeUpdate(); // 영향받은 row의 수
+            return successCount;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(ps);
+            close(conn);
+        }
+
+        return 0;
+    }
+
+    @Override
+    public int deleteProductById(int id) {
+        return 0;
+    }
+
+    @Override
+    public int updateProduct(int id, String name, int price) {
+        return 0;
     }
 
 }

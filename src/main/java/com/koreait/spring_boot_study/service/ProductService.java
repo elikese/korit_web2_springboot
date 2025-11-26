@@ -5,9 +5,9 @@ import com.koreait.spring_boot_study.dto.ModifyProductReqDto;
 import com.koreait.spring_boot_study.entity.Product;
 import com.koreait.spring_boot_study.exception.ProductInsertException;
 import com.koreait.spring_boot_study.exception.ProductNotFoundException;
-import com.koreait.spring_boot_study.repository.ProductJdbcRepo;
-import com.koreait.spring_boot_study.repository.ProductRepository;
+import com.koreait.spring_boot_study.repository.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,11 +16,21 @@ import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
-    // private ProductRepository productRepository;
-    private ProductJdbcRepo productRepository;
+
+    // 인터페이스타입으로 필드를 가지고 있음
+    private ProductRepo productRepository;
 
     @Autowired
-    public ProductService(ProductJdbcRepo productRepository) {
+    public ProductService(@Qualifier("jdbc") ProductRepo productRepository) {
+        /*
+        ProductRepo -> 인터페이스
+        인터페이스 타입의 객체는 존재하지 x -> 구현체가 있나 Ioc컨테이너를 검사
+        ProductJdbcRepo, ProductRepository 둘다 ProductRepo를 implements 받았음
+        여러개인 경우가 되어버림 -> 우선순위를 지정해줘서 해결 할 수 있다.
+        1. 필드 변수명과 bean 이름이 같으면 매칭
+        2. @Qualifier 사용
+        3. @Primary를 사용
+        */
         this.productRepository = productRepository;
     }
 
