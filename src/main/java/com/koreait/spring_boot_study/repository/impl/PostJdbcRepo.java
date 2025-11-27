@@ -138,11 +138,50 @@ public class PostJdbcRepo implements PostRepo {
 
     @Override
     public int deletePostById(int id) {
+        /*
+        entity 클래스이름은 테이블명을 파스칼케이스로 작성
+        칼럼명은 스네이크케이스로 작성
+        필드명은 카멜케이스로 작성
+        */
+        String sql = "delete from post where id = ?";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = dataSource.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(ps);
+            close(conn);
+        }
         return 0;
     }
 
     @Override
     public int updatePost(int id, String title, String content) {
+        // sql문을 문자열로 작성하는게 위험하다.
+        String sql = "update post set title = ?, content = ? where id = ?";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = dataSource.getConnection();
+            ps = conn.prepareStatement(sql);
+
+            ps.setString(1, title);
+            ps.setString(2, content);
+            ps.setInt(3, id);
+
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(ps);
+            close(conn);
+        }
         return 0;
     }
 }

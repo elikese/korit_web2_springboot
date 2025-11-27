@@ -2,9 +2,11 @@ package com.koreait.spring_boot_study.service;
 
 import com.koreait.spring_boot_study.dto.AddProductReqDto;
 import com.koreait.spring_boot_study.dto.ModifyProductReqDto;
+import com.koreait.spring_boot_study.dto.Top3SellingProductResDto;
 import com.koreait.spring_boot_study.entity.Product;
 import com.koreait.spring_boot_study.exception.ProductInsertException;
 import com.koreait.spring_boot_study.exception.ProductNotFoundException;
+import com.koreait.spring_boot_study.model.Top3SellingProduct;
 import com.koreait.spring_boot_study.repository.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -82,6 +84,23 @@ public class ProductService {
         if(successCount <= 0) {
             throw new ProductNotFoundException("해당 상품은 존재하지 않습니다.");
         }
+    }
+
+    // Top3 상품들 리턴해주는 메서드(model을 리턴하면 안됨)
+    public List<Top3SellingProductResDto> getTop3SellingProduct() {
+        List<Top3SellingProduct> results = productRepository.findTop3SellingProducts();
+        List<Top3SellingProductResDto> outputs = new ArrayList<>();
+        for(Top3SellingProduct result : results) {
+            Top3SellingProductResDto dto
+                    = Top3SellingProductResDto.from(result);
+
+            outputs.add(dto);
+        }
+        return outputs;
+//        return productRepository.findTop3SellingProducts().stream()
+//                // 메서드참조로 축약할 수 있다.
+//                .map(model -> Top3SellingProductResDto.from(model))
+//                .collect(Collectors.toList());
     }
 
 }

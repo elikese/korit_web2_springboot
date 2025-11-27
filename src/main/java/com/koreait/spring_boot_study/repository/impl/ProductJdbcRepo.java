@@ -1,6 +1,7 @@
 package com.koreait.spring_boot_study.repository.impl;
 
 import com.koreait.spring_boot_study.entity.Product;
+import com.koreait.spring_boot_study.model.Top3SellingProduct;
 import com.koreait.spring_boot_study.repository.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -196,4 +197,48 @@ public class ProductJdbcRepo implements ProductRepo {
         return 0;
     }
 
+    @Override
+    public List<Top3SellingProduct> findTop3SellingProducts() {
+        List<Top3SellingProduct> result = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("select p.product_id, p.product_name, sum(od.quantity) as total_sold_count ");
+        sb.append("from product p ");
+        sb.append("join order_details od ");
+        sb.append("on p.product_id = od.product_id ");
+        sb.append("group by p.product_id, p.product_name ");
+        sb.append("order by total_sold_count desc ");
+        sb.append("limit 3");
+
+        String sql = sb.toString();
+
+        try {
+            conn = dataSource.getConnection();
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            while(rs.next()) {
+                int id = rs.getInt("product_id");
+                String name = rs.getString("product_name");
+                int totalSoldCount = rs.getInt("total_sold_count");
+
+                result.add(new Top3SellingProduct(id, name, totalSoldCount));
+            }
+
+            return result;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(rs);
+            close(ps);
+            close(conn);
+        }
+
+
+        return List.of();
+    }
 }
