@@ -8,6 +8,7 @@ import com.koreait.spring_boot_study.exception.ProductInsertException;
 import com.koreait.spring_boot_study.exception.ProductNotFoundException;
 import com.koreait.spring_boot_study.model.Top3SellingProduct;
 import com.koreait.spring_boot_study.repository.ProductRepo;
+import com.koreait.spring_boot_study.repository.mapper.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -20,10 +21,11 @@ import java.util.stream.Collectors;
 public class ProductService {
 
     // 인터페이스타입으로 필드를 가지고 있음
-    private ProductRepo productRepository;
+    // private ProductRepo productRepository;
+    private ProductMapper productRepository;
 
     @Autowired
-    public ProductService(@Qualifier("jdbc") ProductRepo productRepository) {
+    public ProductService(ProductMapper productRepository) {
         /*
         ProductRepo -> 인터페이스
         인터페이스 타입의 객체는 존재하지 x -> 구현체가 있나 Ioc컨테이너를 검사

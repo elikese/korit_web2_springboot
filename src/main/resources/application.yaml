@@ -1,8 +1,12 @@
 spring:
-  application:
-    name: spring-boot-study
   datasource:
     url: jdbc:mysql://localhost:3306/web2
     username: root
     password: 1q2w3e4r!
     driver-class-name: com.mysql.cj.jdbc.Driver
+  application:
+    name: spring-boot-study
+
+mybatis:
+  mapper-locations: classpath:mappers/*.xml # mapper의 경로지정
+  type-aliases-package: com.koreait.spring_boot_study.entity # entity들 경로지정

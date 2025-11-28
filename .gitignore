@@ -4,7 +4,7 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-### SECRET ###
+### 시크릿 ###
 src/main/resources/application-secret.yaml
 
 ### STS ###

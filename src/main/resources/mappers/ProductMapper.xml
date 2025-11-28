@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koreait.spring_boot_study.repository.mapper.ProductMapper">
+    <!--########################## RESULT_MAP ##########################-->
+    <!--
+     resultMap: 테이블컬럼명과 엔티티클래스 필드를 매핑
+     id: resultMap 식별용, type: entity클래스의 참조경로
+     -->
+    <resultMap id="productMap" type="com.koreait.spring_boot_study.entity.Product">
+        <!--
+        id: pk칼럼과 entity 클래스 필드를 매핑
+        result: 일반칼럼과 entity 클래스 필드를 매핑
+        -->
+        <id property="id" column="product_id"/>
+        <result property="name" column="product_name"/>
+        <result property="price" column="product_price"/>
+    </resultMap>
+
+
+    <!--########################## QUERY ##########################-->
+
+    <!--
+    id : mapper 인터페이스에 선언된 메서드 이름
+    resultMap : DB로 부터 받아온 테이블(ResultSet)을 지정한
+    resultMap의 id를 입력하여 연결시킨다.
+    -->
+    <select id="findAllProducts" resultMap="productMap">
+        select
+            product_id,
+            product_name,
+            product_price
+        from
+            product
+    </select>
+    <!-- resultType: 단일컬럼 반환시, 자바 기본 자료형을 지정할 수 있다. -->
+    <select id="findProductNameById" resultType="String">
+        select
+            product_name
+        from
+            product
+        where
+            product_id = #{id}
+        <!--매개변수로 넘어온 값을 #{}으로 주입할 수 있다-->
+    </select>
+
+    <insert id="insertProduct">
+    </insert>
+    <update id="updateProduct">
+    </update>
+    <delete id="deleteProductById">
+    </delete>
+
+    <!--resultType에는 우리가 정의한 클래스도 지정할 수 있다.-->
+    <select id="findTop3SellingProducts"
+            resultType="com.koreait.spring_boot_study.model.Top3SellingProduct">
+
+    </select>
+
+</mapper>

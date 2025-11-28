@@ -38,11 +38,11 @@
 		</dependency>
 
 		<!--ORM-->
-<!--		<dependency>-->
-<!--			<groupId>org.mybatis.spring.boot</groupId>-->
-<!--			<artifactId>mybatis-spring-boot-starter</artifactId>-->
-<!--			<version>3.0.5</version>-->
-<!--		</dependency>-->
+		<dependency>
+			<groupId>org.mybatis.spring.boot</groupId>
+			<artifactId>mybatis-spring-boot-starter</artifactId>
+			<version>3.0.5</version>
+		</dependency>
 
 		<!--스프링부트 프로젝트 개발시 유용한 툴, 기능 예) 코드변경시 알아서 재시작-->
 		<dependency>
