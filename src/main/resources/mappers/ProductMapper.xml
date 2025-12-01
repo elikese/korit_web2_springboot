@@ -17,6 +17,26 @@
         <id property="id" column="product_id"/>
         <result property="name" column="product_name"/>
         <result property="price" column="product_price"/>
+        <!--Product entity 필드에 orderDetails(list)를 join을 통해 가져옴
+            orderDetail도 객체로 만들어 와야한다 -> resultMap을 지정을 해준다
+        -->
+        <collection property="orderDetails" resultMap="orderDetailMap" javaType="list"/>
+    </resultMap>
+    <!-- Product + OrderDetail join을 위한 OrderDetail ResultMap
+     -> OrderDetail 객체들을 만들어서 Product 객체에 들어갈 수 있음
+
+     우리가 작성하고 있는 xml파일은 Product위주의 xml파일!
+     -> Product 이외의 entity ResultMap을 작성할때는 join하고 select할 필드만 선언해도 된다
+     -->
+    <resultMap id="orderDetailMap" type="com.koreait.spring_boot_study.entity.OrderDetail">
+        <id property="orderDetailId" column="order_detail_id" />
+        <result property="quantity" column="quantity" />
+    </resultMap>
+
+    <resultMap id="top3Map" type="com.koreait.spring_boot_study.model.Top3SellingProduct">
+        <id property="productId" column="product_id" />
+        <result property="productName" column="product_name" />
+        <result property="totalSoldCount" column="total_sold_count" />
     </resultMap>
 
 
@@ -69,8 +89,32 @@
     </delete>
 
     <!--resultType에는 우리가 정의한 클래스도 지정할 수 있다.-->
+    <!--join 데이터를 가져오는 두가지 방법 -->
+    <!--1. domain model 클래스를 정의하여 resultMap으로 가져오는
+     권장) 집계함수 사용시 -->
+    <!--2. resultMap을 작성하여, 그래프탐색으로 가져오는 방법
+     권장) 조인을 1~3회 할때
+     -->
     <select id="findTop3SellingProducts"
-            resultType="com.koreait.spring_boot_study.model.Top3SellingProduct">
+            resultMap="top3Map">
+        select
+            p.product_id,
+            p.product_name,
+            sum(od.quantity) as total_sold_count
+        from
+            product p
+        inner join order_details od
+            on p.product_id = od.product_id
+        group by
+            p.product_id,
+            p.product_name
+        order by
+            total_sold_count desc
+        limit 3
+    </select>
+
+    <select id="findProductWithQuantities" resultMap="productMap">
+
 
     </select>
 

@@ -28,6 +28,12 @@ public interface ProductMapper {
     객체간 참조(그래프탐색)을 지원하겠다.
     db의 테이블과 1:1 대응되는 것이 entity -> fk컬럼을 id필드로 가지고 있음
     객체지향적(그래프탐색) entity -> fk컬럼을 객체자체를 필드로 가지고 있음(연관관계 설정)
+
+    --- mybatis 내부구현에 대한 간략한 이해
+    mapper(interface: 추상체) --- dynamicProxy(mybatis가 알아서) --- xml(실제 구현체)
+    1. 서비스는 mapper interface만 알고있음, 주입받고 있다.
+    2. 실제로 Ioc컨테이너에서 주입해주는 것은 mapper 인터페이스가아니라, dynamicProxy객체
+    3. dynamicProxy객체를 mybatis가 xml을 보고 생성 & bean 등록을 함.
     */
 
     // 1. 다건조회(전체조회)
@@ -59,4 +65,8 @@ public interface ProductMapper {
     // join 결과를 받아옴
     // 판매량기준 top3 받아오자!
     List<Top3SellingProduct> findTop3SellingProducts();
+
+    // productId로 판매량까지 같이 조회
+    Product findProductWithQuantities(int productId);
+
 }
