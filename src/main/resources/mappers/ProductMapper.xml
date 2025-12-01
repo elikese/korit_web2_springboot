@@ -114,8 +114,18 @@
     </select>
 
     <select id="findProductWithQuantities" resultMap="productMap">
-
-
+        select
+            p.product_id,
+            p.product_name,
+            p.product_price,
+            od.order_detail_id,
+            od.quantity
+        from
+            product p
+            left join order_details od
+            on p.product_id = od.product_id
+        where
+            p.product_id = #{productId}
     </select>
 
 </mapper>
