@@ -56,7 +56,7 @@ public class PostController {
 
     @PostMapping("/add")
     public ResponseEntity<?> addPost(
-            @Valid @RequestBody AddPostReqDto dto
+            @Valid @RequestBody AddPostReqDto dto //잭슨이 dto를 만들 때, NoArgsConstructor필요!
     ) {
         postService.addPost(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body("등록성공");

@@ -3,11 +3,13 @@ package com.koreait.spring_boot_study.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter @Setter
 @ToString
+@NoArgsConstructor
 public class AddPostReqDto {
 
     @NotBlank(message = "제목은 비울 수 없습니다.")

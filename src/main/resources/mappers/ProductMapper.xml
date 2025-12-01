@@ -47,10 +47,25 @@
     </select>
 
     <insert id="insertProduct">
+        insert into
+            product (product_name, product_price)
+        values
+            (#{name}, #{price})
     </insert>
     <update id="updateProduct">
+        update
+            product
+        set
+            product_name = #{name},
+            product_price = #{price}
+        where
+            product_id = #{id}
     </update>
     <delete id="deleteProductById">
+        delete from
+            product
+        where
+            product_id = #{id}
     </delete>
 
     <!--resultType에는 우리가 정의한 클래스도 지정할 수 있다.-->

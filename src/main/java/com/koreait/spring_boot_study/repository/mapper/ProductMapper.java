@@ -3,8 +3,12 @@ package com.koreait.spring_boot_study.repository.mapper;
 import com.koreait.spring_boot_study.entity.Product;
 import com.koreait.spring_boot_study.model.Top3SellingProduct;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 // xml파일과 1:1 매핑되는 자바파일
 // xml을 통해 db에서 가져온 결과(rs)를 자바객체로 가져오는 심부름역할
 @Mapper
@@ -30,12 +34,27 @@ public interface ProductMapper {
     List<Product> findAllProducts();
     // 2. 단건조회(상품 하나만 조회)
     String findProductNameById(int id);
+
     // 상품 추가
-    int insertProduct(String name, int price);
+    int insertProduct(
+            @Param("name") String name,
+            @Param("price") int price
+    ); // @Param -> xml에서 매개변수이름을 전달할때 사용
+    // 매개변수들을 HashMap형태로 가져가게 됨.
+    // 우리가 @Param에 적어주는 것은 key값
+    // xml에서는 해당 key값을 적어줘서 value값들을 동적으로 처리
+    // Param을 적어주지 않으면, 컴파일러 옵션에 따라서 작동 할 때도 있고, 안될때도 있다.
+    // -> 매개변수가 2개 이상일 경우, 적어주는걸 권장
+
     // 단건 삭제
     int deleteProductById(int id);
+
     // 단건 업데이트
-    int updateProduct(int id, String name, int price);
+    int updateProduct(
+            @Param("id") int id,
+            @Param("name") String name,
+            @Param("price") int price
+    );
 
     // join 결과를 받아옴
     // 판매량기준 top3 받아오자!

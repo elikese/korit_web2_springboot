@@ -42,12 +42,24 @@ resultMap으로 지정해주면 됩니다.) -> interface의 시그니처를 따�
     </select>
 
     <insert id="insertPost">
-
+        insert into
+            post (title, content)
+        values
+            (#{title}, #{content})
     </insert>
     <delete id="deletePostById">
-
+        delete from
+            post
+        where
+            id = #{id}
     </delete>
     <update id="updatePost">
-
+        update
+            post
+        set
+            title = #{title},
+            content = #{content}
+        where
+            id = #{id}
     </update>
 </mapper>
