@@ -43,8 +43,6 @@ public interface PostMapper {
             @Param("contentKeyword") String contentKeyword
     );
 
-
-
     // 2. Post + Comment 조인 단건 조회 by Id
     /*
     최종 결과
@@ -58,5 +56,7 @@ public interface PostMapper {
         ]
     }
     */
-    
+
+    Optional<Post> findPostWithComments(int id);
+
 }

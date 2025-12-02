@@ -1,5 +1,12 @@
 package com.koreait.spring_boot_study.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class Comment {
     private int commentId;
     private String commentContent;

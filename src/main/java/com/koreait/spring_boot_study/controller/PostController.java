@@ -2,6 +2,7 @@ package com.koreait.spring_boot_study.controller;
 
 import com.koreait.spring_boot_study.dto.req.AddPostReqDto;
 import com.koreait.spring_boot_study.dto.req.ModifyPostReqDto;
+import com.koreait.spring_boot_study.dto.req.SearchPostReqDto;
 import com.koreait.spring_boot_study.dto.res.PostResDto;
 import com.koreait.spring_boot_study.service.PostService;
 import jakarta.validation.Valid;
@@ -83,4 +84,21 @@ public class PostController {
     // PUT -> 전체 데이터를 갈아끼우겠다(title, content)
     // PATCH -> 일부 데이터를 갈아끼우겠다(content)
     // -> null을 허용해야하는 경우가 많음
+
+    // 게시물 조건 상세 검색
+    @GetMapping("/search")
+    public ResponseEntity<?> searchDetailPosts(
+            // RequestParam을 지정하면, 반드시 값이 있어야 한다.
+            // 없으면 400 에러를 응답
+            // required 옵션에 false를 지정하면, 옵션처럼 사용가능
+            @RequestParam(required = false) String titleKeyword,
+            @RequestParam(required = false) String contentKeyword
+    ) {
+        SearchPostReqDto dto
+                = new SearchPostReqDto(titleKeyword, contentKeyword);
+
+        return ResponseEntity.ok(postService.searchDetailPosts(dto));
+    }
+
+
 }

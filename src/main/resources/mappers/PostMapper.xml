@@ -12,11 +12,23 @@ resultMap으로 지정해주면 됩니다.) -> interface의 시그니처를 따�
 -->
 <mapper namespace="com.koreait.spring_boot_study.repository.mapper.PostMapper">
 
+    <!-- PostJdbcRepo에 있는 rsToPost 메서드와 동일한 역할 -->
     <resultMap id="postMap" type="com.koreait.spring_boot_study.entity.Post">
+        <!-- PK 매핑 -->
         <id property="id" column="id" />
+        <!-- 기본 필드 매핑(기본자료형) -->
         <result property="title" column="title" />
         <result property="content" column="content" />
+        <!-- 타 엔티티 필드 매핑 (1:N, N:1..)-->
+        <collection property="comments" resultMap="commentMap" javaType="list" />
     </resultMap>
+    <resultMap id="commentMap" type="com.koreait.spring_boot_study.entity.Comment">
+        <id property="commentId" column="comment_id" />
+        <result property="commentContent" column="comment_content" />
+    </resultMap>
+
+
+
 
     <select id="findAllPosts" resultMap="postMap">
         select
@@ -80,7 +92,24 @@ resultMap으로 지정해주면 됩니다.) -> interface의 시그니처를 따�
                 and content like CONCAT('%', #{contentKeyword}, '%')
             </if>
         order by
-            post_id
+            id
+    </select>
+
+    <select id="findPostWithComments" resultMap="postMap">
+        select
+            p.id,
+            p.title,
+            p.content,
+            c.comment_id,
+            c.comment_content
+        from
+            post p
+            left join comment c
+                on p.id = c.post_id
+        where
+            p.id = #{id}
+        order by
+            c.comment_id
     </select>
 
 </mapper>

@@ -21,5 +21,5 @@ public class Post { // 테이블명:post -> 클래스명: Post
         pk를 fk로 들고있는 쪽이 N이다.
         Post : Comment = 1:N
     */
-    private List<Post> posts;
+    private List<Comment> comments;
 }

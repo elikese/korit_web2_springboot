@@ -4,6 +4,7 @@ import com.koreait.spring_boot_study.dto.req.AddPostReqDto;
 import com.koreait.spring_boot_study.dto.req.ModifyPostReqDto;
 import com.koreait.spring_boot_study.dto.req.SearchPostReqDto;
 import com.koreait.spring_boot_study.dto.res.PostResDto;
+import com.koreait.spring_boot_study.dto.res.PostWithCommentsResDto;
 import com.koreait.spring_boot_study.dto.res.SearchPostResDto;
 import com.koreait.spring_boot_study.dto.res.SearchProductResDto;
 import com.koreait.spring_boot_study.entity.Post;
@@ -113,6 +114,26 @@ public class PostService {
                 .map(p -> new SearchPostResDto(p.getTitle(), p.getContent()))
                 .collect(Collectors.toList());
     }
+
+    public PostWithCommentsResDto getPostWithComments(int id) {
+        Post post = postRepository.findPostWithComments(id)
+                .orElseThrow(() -> new PostNotFoundException("해당 게시글을 찾을 수 없습니다."));
+
+        // comments null 체크해야함!
+        List<String> comments
+                = post.getComments() == null
+                ? List.of() // null이면 빈리스트 반환
+                : post.getComments().stream()
+                .map(c -> c.getCommentContent())
+                .collect(Collectors.toList()); // 아니라면, id빼고 content 내용만
+
+        return new PostWithCommentsResDto(
+                post.getTitle(),
+                post.getContent(),
+                comments
+        );
+    }
+
 
 
 }
