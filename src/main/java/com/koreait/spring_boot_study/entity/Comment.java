@@ -2,7 +2,7 @@ package com.koreait.spring_boot_study.entity;
 
 public class Comment {
     private int commentId;
-    private String content;
+    private String commentContent;
 
     // private int PostId;
     private Post post; // fk대신에 객체를 필드로 가지고 있어야한다.

@@ -35,4 +35,22 @@ public interface PostMapper {
             @Param("title") String title,
             @Param("content") String content
     );
+    
+    // 1. titleKeyword 혹은 contentKeyword로 post를 상세검색하는
+    // xml, mapper, service, controller 작성
+    
+    // 2. Post + Comment 조인 조회
+    /*
+    최종 결과
+    {
+        postTitle: ~
+        postContent: ~
+        comments: [
+            '댓글1',
+            '댓글2',
+            '댓글3'
+        ]
+    }
+    */
+    
 }

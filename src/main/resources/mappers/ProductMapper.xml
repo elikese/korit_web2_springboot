@@ -128,4 +128,36 @@
             p.product_id = #{productId}
     </select>
 
+    <select id="searchDetailProducts" resultMap="productMap">
+        select
+            product_id,
+            product_name,
+            product_price
+        from
+            product
+        where
+            1 = 1
+            <!-- 만약에(if) nameKeyword가 존재한다면, 검색 -->
+            <if test="nameKeyword != null and nameKeyword != ''">
+                <!-- CONCAT: sql 함수 - 문자열끼리 합치는 함수 -->
+                and product_name like CONCAT('%', #{nameKeyword} ,'%')
+            </if>
+            <!--
+             xml 에서 where 쿼리 작성시, (<, >) 주의!
+             꺽쇄는 태그로 인식하는 오류가 번번히 발생하니 매우 주의!
+             > : &gt;  >= : &gt;=
+             < : &lt;  <= : &lt;=
+             -->
+            <!-- 만약에(if) minPrice 존재한다면, 필터링 -->
+            <if test="minPrice != null">
+                and product_price &gt;= #{minPrice}
+            </if>
+            <!-- 만약에(if) maxPrice 존재한다면, 필터링 -->
+            <if test="maxPrice != null">
+                and product_price &lt;= #{maxPrice}
+            </if>
+        order by
+            product_id
+    </select>
+
 </mapper>

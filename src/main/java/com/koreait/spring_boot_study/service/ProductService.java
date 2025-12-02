@@ -1,18 +1,17 @@
 package com.koreait.spring_boot_study.service;
 
-import com.koreait.spring_boot_study.dto.AddProductReqDto;
-import com.koreait.spring_boot_study.dto.ModifyProductReqDto;
-import com.koreait.spring_boot_study.dto.ProductQuantityResDto;
-import com.koreait.spring_boot_study.dto.Top3SellingProductResDto;
-import com.koreait.spring_boot_study.entity.OrderDetail;
+import com.koreait.spring_boot_study.dto.req.AddProductReqDto;
+import com.koreait.spring_boot_study.dto.req.ModifyProductReqDto;
+import com.koreait.spring_boot_study.dto.req.SearchProductReqDto;
+import com.koreait.spring_boot_study.dto.res.ProductQuantityResDto;
+import com.koreait.spring_boot_study.dto.res.SearchProductResDto;
+import com.koreait.spring_boot_study.dto.res.Top3SellingProductResDto;
 import com.koreait.spring_boot_study.entity.Product;
 import com.koreait.spring_boot_study.exception.ProductInsertException;
 import com.koreait.spring_boot_study.exception.ProductNotFoundException;
 import com.koreait.spring_boot_study.model.Top3SellingProduct;
-import com.koreait.spring_boot_study.repository.ProductRepo;
 import com.koreait.spring_boot_study.repository.mapper.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -145,6 +144,39 @@ public class ProductService {
 //        }
         
         return resultData;
+    }
+
+    // dto-req,res 2가지
+    // req: nameKeyword, minPrice, maxPrice
+    // res: id가 필요하면 id까지 dto에 작성하여 리턴한다.
+    public List<SearchProductResDto> searchDetailProducts(
+            SearchProductReqDto dto
+    ) {
+        List<Product> products = productRepository.searchDetailProducts(
+                dto.getNameKeyword(),
+                dto.getMinPrice(),
+                dto.getMaxPrice()
+        );
+
+        if(products == null || products.isEmpty()) {
+            throw new ProductNotFoundException("조건에 맞는 상품이 없습니다.");
+        }
+
+        List<SearchProductResDto> dtos = new ArrayList<>();
+        // 1. stream api 사용하는 방법
+        dtos = products.stream()
+                .map(p -> new SearchProductResDto(
+                        p.getName(),
+                        p.getPrice()
+                ))
+                .collect(Collectors.toList());
+        // 2. for문 사용하는 방법
+//        for(Product p : products) {
+//            SearchProductResDto resDto
+//                    = new SearchProductResDto(p.getName(), p.getPrice());
+//            dtos.add(resDto);
+//        }
+        return dtos;
     }
 
 }

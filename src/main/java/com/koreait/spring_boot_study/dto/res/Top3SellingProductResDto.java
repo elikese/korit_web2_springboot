@@ -1,8 +1,7 @@
-package com.koreait.spring_boot_study.dto;
+package com.koreait.spring_boot_study.dto.res;
 
 import com.koreait.spring_boot_study.model.Top3SellingProduct;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

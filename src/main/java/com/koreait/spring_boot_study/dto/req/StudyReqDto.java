@@ -1,4 +1,4 @@
-package com.koreait.spring_boot_study.dto;
+package com.koreait.spring_boot_study.dto.req;
 
 import lombok.Getter;
 import lombok.Setter;

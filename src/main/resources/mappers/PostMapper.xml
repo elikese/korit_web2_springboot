@@ -11,6 +11,7 @@ resultMap으로 지정해주면 됩니다.) -> interface의 시그니처를 따�
 -> 인터페이스의 메서드 시그니처를 인식해서 알아서 옵셔널로 포장해서 리턴해준다.
 -->
 <mapper namespace="com.koreait.spring_boot_study.repository.mapper.PostMapper">
+
     <resultMap id="postMap" type="com.koreait.spring_boot_study.entity.Post">
         <id property="id" column="id" />
         <result property="title" column="title" />

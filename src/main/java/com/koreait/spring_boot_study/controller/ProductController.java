@@ -1,7 +1,8 @@
 package com.koreait.spring_boot_study.controller;
 
-import com.koreait.spring_boot_study.dto.AddProductReqDto;
-import com.koreait.spring_boot_study.dto.ModifyProductReqDto;
+import com.koreait.spring_boot_study.dto.req.AddProductReqDto;
+import com.koreait.spring_boot_study.dto.req.ModifyProductReqDto;
+import com.koreait.spring_boot_study.dto.req.SearchProductReqDto;
 import com.koreait.spring_boot_study.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,6 +86,17 @@ public class ProductController {
             (@PathVariable int productId) {
         return ResponseEntity
                 .ok(productService.getProductQuantitiesById(productId));
+    }
+
+    // 조건검색
+    // localhost:8080/product/search?nameKeyword=키보드&minPrice=10000
+    @GetMapping("/search")
+    public ResponseEntity<?> searchProducts(
+            @ModelAttribute SearchProductReqDto dto
+    ) {
+        return ResponseEntity.ok(
+                productService.searchDetailProducts(dto)
+        );
     }
 
 }
