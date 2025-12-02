@@ -2,7 +2,10 @@ package com.koreait.spring_boot_study.service;
 
 import com.koreait.spring_boot_study.dto.req.AddPostReqDto;
 import com.koreait.spring_boot_study.dto.req.ModifyPostReqDto;
+import com.koreait.spring_boot_study.dto.req.SearchPostReqDto;
 import com.koreait.spring_boot_study.dto.res.PostResDto;
+import com.koreait.spring_boot_study.dto.res.SearchPostResDto;
+import com.koreait.spring_boot_study.dto.res.SearchProductResDto;
 import com.koreait.spring_boot_study.entity.Post;
 import com.koreait.spring_boot_study.exception.PostInsertException;
 import com.koreait.spring_boot_study.exception.PostNotFoundException;
@@ -91,5 +94,25 @@ public class PostService {
             throw new PostNotFoundException("해당 게시글을 찾을 수 없습니다.");
         }
     }
+
+    // 게시물 상세 검색 dto - req, res 각각 만들어 주는게 best
+    public List<SearchPostResDto> searchDetailPosts(
+            SearchPostReqDto dto
+    ) {
+        List<Post> posts = postRepository.searchDetailPosts(
+                dto.getTitleKeyword(), dto.getContentKeyword()
+        );
+
+        if(posts == null || posts.isEmpty()) {
+            throw new PostNotFoundException("조건에 맞는 게시글이 없습니다.");
+        }
+
+        // List<Post> -> List<SearchPostResDto>
+        // List<entity> -> List<dto>
+        return posts.stream()
+                .map(p -> new SearchPostResDto(p.getTitle(), p.getContent()))
+                .collect(Collectors.toList());
+    }
+
 
 }

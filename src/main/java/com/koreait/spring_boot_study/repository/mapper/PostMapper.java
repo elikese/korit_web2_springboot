@@ -38,8 +38,14 @@ public interface PostMapper {
     
     // 1. titleKeyword 혹은 contentKeyword로 post를 상세검색하는
     // xml, mapper, service, controller 작성
-    
-    // 2. Post + Comment 조인 조회
+    List<Post> searchDetailPosts(
+            @Param("titleKeyword") String titleKeyword,
+            @Param("contentKeyword") String contentKeyword
+    );
+
+
+
+    // 2. Post + Comment 조인 단건 조회 by Id
     /*
     최종 결과
     {

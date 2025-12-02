@@ -63,4 +63,24 @@ resultMap으로 지정해주면 됩니다.) -> interface의 시그니처를 따�
         where
             id = #{id}
     </update>
+
+    <select id="searchDetailPosts" resultMap="postMap">
+        select
+            id,
+            title,
+            content
+        from
+            post
+        where
+            1=1
+            <if test="titleKeyword != null and titleKeyword != ''">
+                and title like CONCAT('%', #{titleKeyword} ,'%')
+            </if>
+            <if test="contentKeyword != null and contentKeyword != ''">
+                and content like CONCAT('%', #{contentKeyword}, '%')
+            </if>
+        order by
+            post_id
+    </select>
+
 </mapper>
