@@ -4,6 +4,7 @@ import com.koreait.spring_boot_study.dto.req.AddPostReqDto;
 import com.koreait.spring_boot_study.dto.req.ModifyPostReqDto;
 import com.koreait.spring_boot_study.dto.req.SearchPostReqDto;
 import com.koreait.spring_boot_study.dto.res.PostResDto;
+import com.koreait.spring_boot_study.dto.res.PostWithCommentsResDto;
 import com.koreait.spring_boot_study.service.PostService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,6 +99,12 @@ public class PostController {
                 = new SearchPostReqDto(titleKeyword, contentKeyword);
 
         return ResponseEntity.ok(postService.searchDetailPosts(dto));
+    }
+
+    @GetMapping("/{id}/comments")
+    public ResponseEntity<?> getPostWithComments(@PathVariable int id) {
+        PostWithCommentsResDto dto = postService.getPostWithComments(id);
+        return ResponseEntity.ok(dto);
     }
 
 

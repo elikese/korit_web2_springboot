@@ -27,9 +27,6 @@ resultMap으로 지정해주면 됩니다.) -> interface의 시그니처를 따�
         <result property="commentContent" column="comment_content" />
     </resultMap>
 
-
-
-
     <select id="findAllPosts" resultMap="postMap">
         select
             id,

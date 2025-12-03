@@ -160,4 +160,20 @@
             product_id
     </select>
 
+    <insert id="insertProducts">
+        insert into
+            product (product_name, product_price)
+        values
+            <!-- foreach 사용법
+            - collection: 매개변수로 전달한 list,map,set...
+            - item: 반복문을 돌때 foreach 태그 안에서 list에 있는 요소를 대입받는 변수
+            java와 비교)for(Product p : products) {} ->
+            p: 반복문 돌때 for문 안에서 list에 있는 요소를 대입받는 변수
+            - separator: 반복문 끝날때 추가되는 문자
+            -->
+            <foreach collection="products" item="product" separator=",">
+                (#{product.name} , #{product.price})
+            </foreach>
+        </insert>
+
 </mapper>

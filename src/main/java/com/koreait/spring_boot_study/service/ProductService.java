@@ -13,6 +13,7 @@ import com.koreait.spring_boot_study.model.Top3SellingProduct;
 import com.koreait.spring_boot_study.repository.mapper.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -177,6 +178,32 @@ public class ProductService {
 //            dtos.add(resDto);
 //        }
         return dtos;
+    }
+
+
+    // 트랜잭션
+    // 해당 메서드를 트랜잭션으로 실행하겠다.
+    // 메서드 종료 직전에 정상 종료라면, commit
+    // 예외가 발생할경우 rollback
+    // 어노테이션만 설정하면, 스프링부트가 알아서 db로
+    // start transaction, commit, rollback 쿼리를 삽입해서 송신한다.
+    @Transactional(rollbackFor = Exception.class)
+    public void addProducts(List<AddProductReqDto> dtoList) {
+        // List<dto> -> List<entity> 변환
+        List<Product> products = dtoList.stream()
+                        .map(dto -> Product.builder()
+                                .name(dto.getName())
+                                .price(dto.getPrice())
+                                .build())
+                                .collect(Collectors.toList());
+
+        int successCount = productRepository.insertProducts(products);
+
+        // 전체 건수만큼 insert되지 않았다면 예외처리
+        if(successCount != products.size()) {
+            throw new ProductInsertException("상품 등록 중 문제가 발생했습니다.");
+        }
+
     }
 
 }

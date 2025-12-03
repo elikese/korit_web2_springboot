@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/product")
 public class ProductController {
@@ -97,6 +99,26 @@ public class ProductController {
         return ResponseEntity.ok(
                 productService.searchDetailProducts(dto)
         );
+    }
+
+    /* 요청예시
+    [
+        {
+            "name": "로지텍 키보드",
+            "price": 30000
+        },
+        {
+            "name": "무선마우스",
+            "price": 25000
+        }
+    ]
+    */
+    @PostMapping("/add/bulk")
+    public ResponseEntity<?> addProducts(
+            @RequestBody @Valid List<AddProductReqDto> dtoList) {
+        productService.addProducts(dtoList);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body("전체 상품 등록 성공: " + dtoList.size() + "건");
     }
 
 }
