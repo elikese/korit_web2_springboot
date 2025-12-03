@@ -116,6 +116,4 @@ public class PostController {
                 .body("전체 게시글 등록 성공 : " + dtoList.size() + "건");
     }
 
-    // bit.ly/koreait-web -> 시큐리티 의존성 추가
-
 }
