@@ -107,5 +107,15 @@ public class PostController {
         return ResponseEntity.ok(dto);
     }
 
+    @PostMapping("/add/bulk")
+    public ResponseEntity<?> addPosts(
+            @Valid @RequestBody List<AddPostReqDto> dtoList) {
+        postService.addPosts(dtoList);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body("전체 게시글 등록 성공 : " + dtoList.size() + "건");
+    }
+
+    // bit.ly/koreait-web -> 시큐리티 의존성 추가
 
 }

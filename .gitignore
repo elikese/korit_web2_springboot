@@ -6,6 +6,7 @@ target/
 
 ### 시크릿 ###
 src/main/resources/application-secret.yaml
+application-secret.yaml
 
 ### STS ###
 .apt_generated

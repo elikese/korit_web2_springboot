@@ -6,7 +6,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Data @Builder
 public class Post { // 테이블명:post -> 클래스명: Post
     private int id; // 컬럼명: post_id -> 필드명: postId
     private String title; // 컬럼명: post_title -> 필드명: postTitle

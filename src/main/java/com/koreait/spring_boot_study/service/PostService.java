@@ -14,6 +14,7 @@ import com.koreait.spring_boot_study.repository.mapper.PostMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -134,6 +135,26 @@ public class PostService {
         );
     }
 
+    public void addPosts(List<AddPostReqDto> dtoList) {
+        // List<dto> -> List<entity>
+
+        List<Post> entityList = new ArrayList<>(); // 빈 리스트
+        // 매개변수로 들어온 dtoList를 순회
+        for(AddPostReqDto dto : dtoList) {
+            // dto 필드에 있는 걸 entity 필드로 대입시켜 초기화
+            Post post = Post.builder()
+                    .title(dto.getTitle())
+                    .content(dto.getContent())
+                    .build();
+
+            entityList.add(post);
+        }
+        int successCount = postRepository.insertPosts(entityList);
+
+        if(successCount != entityList.size()) {
+            throw new PostInsertException("게시글 등록 중 문제가 발생했습니다.");
+        }
+    }
 
 
 }

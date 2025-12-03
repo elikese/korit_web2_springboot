@@ -109,4 +109,13 @@ resultMap으로 지정해주면 됩니다.) -> interface의 시그니처를 따�
             c.comment_id
     </select>
 
+    <insert id="insertPosts">
+        insert into
+            post (title, content)
+        values
+            <foreach collection="posts" item="post" separator=",">
+                (#{post.title}, #{post.content})
+            </foreach>
+    </insert>
+
 </mapper>
