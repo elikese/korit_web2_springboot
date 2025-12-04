@@ -80,12 +80,12 @@ public class SecurityConfig {
         // url 요청에 대한 권한 설정
         http.authorizeHttpRequests(auth -> {
             // 특정 요청에 대해서는 검사하지 않고 통과
-            // auth.requestMatchers("/post/**", "/product/**").permitAll();
+            // auth.requestMatchers("/auth/**").permitAll();
             // 그 외 모든 경로에 대해서는 검사하겠다.
             // auth.anyRequest().authenticated();
 
             // 우선 모두 통과
-            auth.anyRequest().permitAll();
+            // auth.anyRequest().permitAll();
         });
         
         return http.build();
