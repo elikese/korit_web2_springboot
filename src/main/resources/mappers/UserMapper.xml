@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koreait.spring_boot_study.repository.mapper.UserMapper">
+    <resultMap id="roleResultMap" type="com.koreait.spring_boot_study.entity.Role">
+        <id property="roleId" column="role_id"/>
+        <result property="roleName" column="role_name"/>
+    </resultMap>
+    <resultMap id="userResultMap" type="com.koreait.spring_boot_study.entity.User">
+        <id property="userId" column="user_id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="name" column="name"/>
+        <result property="email" column="email"/>
+        <result property="createAt" column="create_at"/>
+        <result property="updateAt" column="update_at"/>
+        <!--
+        연관관계를 여러개(List) 들고올때는 collection,
+        연관관계를 하나 들고올떄는 association
+         -->
+        <association property="role" resultMap="roleResultMap" />
+    </resultMap>
+
+    <insert id="addUser">
+        insert into
+            user (username, password, name, email, create_at, update_at, role_id)
+        values
+            (#{username}, #{password}, #{name}, #{email}, now(), now(), 1)
+    </insert>
+
+    <select id="getUserByUsername" resultMap="userResultMap">
+        select
+            u.user_id,
+            u.username,
+            u.password,
+            u.name,
+            u.email,
+            u.create_at,
+            u.update_at,
+            r.role_id,
+            r.role_name
+        from
+            user u
+            inner join role r on u.role_id = r.role_id
+        where
+            u.username = #{username}
+    </select>
+
+    <select id="getUserByEmail" resultMap="userResultMap">
+        select
+            u.user_id,
+            u.username,
+            u.password,
+            u.name,
+            u.email,
+            u.create_at,
+            u.update_at,
+            r.role_id,
+            r.role_name
+        from
+            user u
+                inner join role r on u.role_id = r.role_id
+        where
+            u.email = #{email}
+    </select>
+
+    <select id="getUserById" resultMap="userResultMap">
+        select
+            u.user_id,
+            u.username,
+            u.password,
+            u.name,
+            u.email,
+            u.create_at,
+            u.update_at,
+            r.role_id,
+            r.role_name
+        from
+            user u
+                inner join role r on u.role_id = r.role_id
+        where
+            u.user_id = #{userId}
+    </select>
+
+
+</mapper>
