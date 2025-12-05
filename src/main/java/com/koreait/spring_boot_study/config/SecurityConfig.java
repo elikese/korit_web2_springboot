@@ -85,7 +85,7 @@ public class SecurityConfig {
             // auth.anyRequest().authenticated();
 
             // 우선 모두 통과
-            // auth.anyRequest().permitAll();
+             auth.anyRequest().permitAll();
         });
         
         return http.build();
