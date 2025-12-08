@@ -1,5 +1,6 @@
 package com.koreait.spring_boot_study.config;
 
+import com.koreait.spring_boot_study.jwt.JwtAuthenticationEntryPoint;
 import com.koreait.spring_boot_study.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -9,9 +10,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
@@ -22,6 +26,13 @@ public class SecurityConfig {
     @Bean // 사용자 비밀번호를 암호화하는 객체(시큐리티 라이브러리)
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    // @Component를 정의해서, 컴포넌트스캔을 사용해도 된다.
+    // 시큐리티 설정에 관여하므로, 명시적으로 bean 등록을 하는걸 권장
+    @Bean // 인증실패시 실패응답을 처리할 entryPoint
+    public JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint() {
+        return new JwtAuthenticationEntryPoint();
     }
 
     /*
@@ -42,9 +53,22 @@ public class SecurityConfig {
     */
     @Bean 
     public CorsConfigurationSource corsConfigurationSource() {
+        
         CorsConfiguration cors = new CorsConfiguration(); // 설정객체
+        // #### 쿠키 관련 설정 ####
         // 요청을 보내는 쪽의 도메인(naver.com) 모두 허용
-        cors.addAllowedOriginPattern(CorsConfiguration.ALL);
+        // cors.addAllowedOriginPattern(CorsConfiguration.ALL);
+        // 1. 쿠키를 사용하려면, 특정 도메인을 지정해 줘야함.
+        cors.setAllowedOrigins(List.of(
+                "http://localhost:3000"
+        )); // 특정 origin만 허용해야 쿠키 사용 가능
+
+        cors.setAllowCredentials(true); // 2. 쿠키를 쓰겠습니까?
+        cors.setExposedHeaders(List.of( // 3. 헤더에 쿠키를 담은것을 명시
+                "Set-Cookie"
+        ));
+
+
         // 요청을 보내는 쪽의 Req, Res 헤더 정보에 대한 제한 모두 허용
         cors.addAllowedHeader(CorsConfiguration.ALL);
         // 요청 보내는 쪽의 메서드(get, post...) 모두 허용
@@ -81,16 +105,23 @@ public class SecurityConfig {
                 );
         
         // jwt 관련 필터 설정(나중에)
+        // 1. jwt 필터 추가
+        http.addFilterBefore(jwtAuthenticationFilter,
+                UsernamePasswordAuthenticationFilter.class);
+
+        // 2. jwt 인증실패 시 처리(entryPoint)
+        http.exceptionHandling( e ->
+            e.authenticationEntryPoint(jwtAuthenticationEntryPoint()));
         
         // url 요청에 대한 권한 설정
         http.authorizeHttpRequests(auth -> {
             // 특정 요청에 대해서는 검사하지 않고 통과
-            // auth.requestMatchers("/auth/**").permitAll();
+            auth.requestMatchers("/auth/**").permitAll();
             // 그 외 모든 경로에 대해서는 검사하겠다.
-            // auth.anyRequest().authenticated();
+            auth.anyRequest().authenticated();
 
             // 우선 모두 통과
-             auth.anyRequest().permitAll();
+            // auth.anyRequest().permitAll();
         });
         
         return http.build();
