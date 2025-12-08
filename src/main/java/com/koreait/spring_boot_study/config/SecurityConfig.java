@@ -104,7 +104,7 @@ public class SecurityConfig {
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 );
         
-        // jwt 관련 필터 설정(나중에)
+        // jwt 관련 필터 설정
         // 1. jwt 필터 추가
         http.addFilterBefore(jwtAuthenticationFilter,
                 UsernamePasswordAuthenticationFilter.class);

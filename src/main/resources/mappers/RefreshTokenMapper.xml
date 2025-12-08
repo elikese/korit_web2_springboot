@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koreait.spring_boot_study.repository.mapper.RefreshTokenMapper">
+    <resultMap id="refreshTokenMap" type="com.koreait.spring_boot_study.entity.RefreshToken">
+        <id property="refreshTokenId" column="refresh_token_id" />
+        <result property="userId" column="user_id" />
+        <result property="token" column="token" />
+        <result property="expireAt" column="expire_at" />
+        <result property="createAt" column="create_at" />
+        <result property="updateAt" column="update_at" />
+    </resultMap>
+
+    <insert id="insertRefreshToken">
+        insert into
+            refresh_token
+                (user_id, token, expire_at, create_at, update_at)
+        values
+            (#{userId}, #{token}, #{expireAt}, now(), now())
+    </insert>
+    
+    <select id="findByToken" resultMap="refreshTokenMap">
+        select
+            refresh_token_id,
+            user_id,
+            token,
+            expire_at,
+            create_at,
+            update_at
+        from
+            refresh_token
+        where
+            token = #{token}
+        limit 1
+    </select>
+
+    <update id="updateRefreshToken">
+        update
+            refresh_token
+        set
+            token = #{newToken},
+            update_at = now()
+        where
+            token = #{oldToken}
+    </update>
+
+
+
+</mapper>

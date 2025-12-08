@@ -103,5 +103,15 @@ public class JwtUtil { // jwt 토큰 발급 & jwt 토큰 검증
         return header.substring("Bearer ".length());
     }
 
+    public boolean isRefreshToken(String token) {
+        try {
+            String type = getClaims(token)
+                    .get("type", String.class);
+            return type.equals("REFRESH");
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 
 }
