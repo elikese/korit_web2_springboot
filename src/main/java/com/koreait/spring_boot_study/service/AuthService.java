@@ -4,6 +4,7 @@ import com.koreait.spring_boot_study.dto.req.SignInReqDto;
 import com.koreait.spring_boot_study.dto.req.SignUpReqDto;
 import com.koreait.spring_boot_study.dto.res.SignInResDto;
 import com.koreait.spring_boot_study.entity.User;
+import com.koreait.spring_boot_study.exception.RefreshTokenException;
 import com.koreait.spring_boot_study.exception.UserException;
 import com.koreait.spring_boot_study.jwt.JwtUtil;
 import com.koreait.spring_boot_study.repository.mapper.RefreshTokenMapper;
@@ -44,7 +45,10 @@ public class AuthService {
                 .insertRefreshToken(userId, refreshToken, expireAt);
 
         if (successCount <= 0) {
-            // todo: 예외 던져야함
+            throw new RefreshTokenException(
+                    "리프레시 토큰 저장 오류발생",
+                    HttpStatus.INTERNAL_SERVER_ERROR // 500
+            );
         }
     }
     // refresh 토큰 업데이트
@@ -137,11 +141,18 @@ public class AuthService {
         // 1. 타입검증
         // Refresh 토큰이 아니라면
         if(!jwtUtil.isRefreshToken(refresh)) {
-            // todo: 예외 던져야함
+            throw new RefreshTokenException(
+                    "리프레시 토큰이 아닙니다.",
+                    HttpStatus.BAD_REQUEST // 400
+            );
         }
+
         // 2. DB에 실제 있는 토큰인가 검사
         refreshTokenMapper.findByToken(refresh)
-                .orElseThrow(); // todo: 예외 던져야 함
+                .orElseThrow(() -> new RefreshTokenException(
+                        "리프레쉬 토큰이 유효하지 않습니다",
+                        HttpStatus.UNAUTHORIZED // 401
+                ));
 
         // 3. claims 추출 - 쿠키에서 가져온 토큰으로부터
         Claims claims;
@@ -149,14 +160,33 @@ public class AuthService {
             claims = jwtUtil.getClaims(refresh);
         } catch (ExpiredJwtException e) {
             // 리프레쉬 토큰마저 만료되었을 경우
-            // DB에서 토큰을 제거해줘야한다.(나중에)
+            // DB에서 토큰을 제거해줘야한다. (한번에 주기적으로 삭제하는 방법도 있음)
+            refreshTokenMapper.deleteByToken(refresh);
             // 응답으로 에러메세지를 내려준다 -> 프론트에서 로그인창으로 리디렉션
+            throw new RefreshTokenException(
+                    Map.of("errorMsg", "리프레시 토큰이 만료되었습니다",
+                            "errorCode", "RT_EXPIRED").toString(),
+                    HttpStatus.UNAUTHORIZED
+            );
         } catch (JwtException e) {
             // 위조된 경우 처리 - 보험(있으면 안됨)
-            // db에서 삭제 (나중에)
+            // db에서 삭제
+            refreshTokenMapper.deleteByToken(refresh);
+            throw new RefreshTokenException(
+                    "유효하지 않은 토큰입니다.",
+                    HttpStatus.UNAUTHORIZED
+            );
         }
-        
-        // 4. claims 에서 sub 추출
+        // 4. claims 에서 subject(userId) 추출
+        String userIdStr = claims.get("sub", String.class);
+        int userId = Integer.parseInt(userIdStr); // 형변환
+
+        // userId로 조회해서 User 없으면 에러 반환
+        User user = userMapper.getUserById(userId)
+                .orElseThrow(() -> new UserException(
+                        "사용자를 찾을 수 없습니다",
+                        HttpStatus.NOT_FOUND
+                ));
         // 5. 새토큰 발급
         // 6. DB 업데이트
 

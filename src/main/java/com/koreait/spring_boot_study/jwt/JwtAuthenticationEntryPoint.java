@@ -46,24 +46,24 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         // 응답헤더 설정
         // 응답바디를 json으로
         response.setContentType("application/json; charset=UTF-8");
-        response.setStatus(401); // 401
-
-
-
-
+        
         // 만료예외는 따로 분기해서 처리!
         if(e instanceof ExpiredJwtException) {
+            response.setStatus(401); // 401
             response.getWriter().write(EXPIRED_ERROR_MSG);
             return;
         }
 
         // 그외 JwtException 처리
         if (e instanceof JwtException) {
+            response.setStatus(401); // 401
             response.getWriter().write(INVALID_ERROR_MSG);
             return;
         }
 
         // jwt 이외의 인증예외 처리
-        response.getWriter().write(UNAUTHORIZED_MSG);
+        // 404, 400 예외.. 300... 스프링부트의 기본 스펙을 그대로 응답해줘야함
+        // response.getWriter().write(UNAUTHORIZED_MSG);
+        return;
     }
 }

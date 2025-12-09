@@ -46,6 +46,26 @@
             token = #{oldToken}
     </update>
 
+    <delete id="deleteByToken">
+        delete from
+            refresh_token
+        where
+            token = #{token}
+    </delete>
+
+    <delete id="deleteAllByUserId">
+        delete from
+            refresh_token
+        where
+            user_id = #{userId}
+    </delete>
+    <delete id="deleteExpiredTokens">
+        delete from
+            refresh_token
+        where
+            expire_at &lt; now()
+    </delete>
+
 
 
 </mapper>
