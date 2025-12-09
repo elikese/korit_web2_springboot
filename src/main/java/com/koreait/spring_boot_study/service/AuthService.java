@@ -137,6 +137,7 @@ public class AuthService {
         return tokenPair;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public SignInResDto refreshToken(String refresh) {
         // 1. 타입검증
         // Refresh 토큰이 아니라면
@@ -187,11 +188,29 @@ public class AuthService {
                         "사용자를 찾을 수 없습니다",
                         HttpStatus.NOT_FOUND
                 ));
-        // 5. 새토큰 발급
-        // 6. DB 업데이트
 
-        return new SignInResDto("", "");
+        // 5. 새토큰 발급(rotation - 이전것 삭제하고 새로 발급)
+        SignInResDto newTokens = generateTokenPair(user);
+
+        // 6. 기존 사용자의 모든 refresh 토큰 삭제
+        refreshTokenMapper.deleteAllByUserId(userId);
+
+        // 7. 새로발급한 토큰으로 다시 저장
+        saveRefreshToken(userId, newTokens.getRefreshToken());
+
+        return newTokens;
     }
 
+    public void logout(String refreshToken) {
+        int successCount = refreshTokenMapper
+                .deleteByToken(refreshToken);
+
+        if(successCount <= 0) {
+            throw new RefreshTokenException(
+                    "이미 로그아웃 하였거나 유효하지 않은 접근입니다.",
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+    }
 
 }
