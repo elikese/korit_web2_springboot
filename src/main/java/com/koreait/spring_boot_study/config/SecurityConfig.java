@@ -2,6 +2,7 @@ package com.koreait.spring_boot_study.config;
 
 import com.koreait.spring_boot_study.jwt.JwtAuthenticationEntryPoint;
 import com.koreait.spring_boot_study.jwt.JwtAuthenticationFilter;
+import com.koreait.spring_boot_study.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtUtil jwtUtil;
 
     @Bean // 사용자 비밀번호를 암호화하는 객체(시큐리티 라이브러리)
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -33,6 +34,11 @@ public class SecurityConfig {
     @Bean // 인증실패시 실패응답을 처리할 entryPoint
     public JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint() {
         return new JwtAuthenticationEntryPoint();
+    }
+
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter(jwtUtil);
     }
 
     /*
@@ -106,7 +112,7 @@ public class SecurityConfig {
         
         // jwt 관련 필터 설정
         // 1. jwt 필터 추가
-        http.addFilterBefore(jwtAuthenticationFilter,
+        http.addFilterBefore(jwtAuthenticationFilter(),
                 UsernamePasswordAuthenticationFilter.class);
 
         // 2. jwt 인증실패 시 처리(entryPoint)

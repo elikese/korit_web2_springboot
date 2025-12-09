@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.List;
 
 // filter -> 요청과 응답의 전처리 or 후처리를 위해 존재
-@Component
+
 @RequiredArgsConstructor // @AutoWired 자동화 - final 필드에 대해서
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     // jwt 토큰 전략을 사용하기 때문에
