@@ -89,10 +89,10 @@ public class GlobalExceptionHandler {
         /*
             [
                 {
-                    "name" : "이름은 비울 수 없습니다."
+                    "username" : "이름은 비울 수 없습니다."
                 },
                 {
-                    "price" : "가격은 음수일 수 없습니다."
+                    "password" : "가격은 음수일 수 없습니다."
                 }
             ]
         */

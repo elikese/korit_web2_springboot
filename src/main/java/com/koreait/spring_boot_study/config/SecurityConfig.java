@@ -6,6 +6,7 @@ import com.koreait.spring_boot_study.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -66,7 +67,7 @@ public class SecurityConfig {
         // cors.addAllowedOriginPattern(CorsConfiguration.ALL);
         // 1. 쿠키를 사용하려면, 특정 도메인을 지정해 줘야함.
         cors.setAllowedOrigins(List.of(
-                "http://localhost:3000"
+                "http://localhost:5500", "http://127.0.0.1:5500"
         )); // 특정 origin만 허용해야 쿠키 사용 가능
 
         cors.setAllowCredentials(true); // 2. 쿠키를 쓰겠습니까?
@@ -76,7 +77,9 @@ public class SecurityConfig {
 
 
         // 요청을 보내는 쪽의 Req, Res 헤더 정보에 대한 제한 모두 허용
-        cors.addAllowedHeader(CorsConfiguration.ALL);
+        cors.addAllowedHeader("Authentication");
+        cors.addAllowedHeader("Content-Type");
+
         // 요청 보내는 쪽의 메서드(get, post...) 모두 허용
         cors.addAllowedMethod(CorsConfiguration.ALL);
 
@@ -121,6 +124,8 @@ public class SecurityConfig {
         
         // url 요청에 대한 권한 설정
         http.authorizeHttpRequests(auth -> {
+            auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
+
             // 특정 요청에 대해서는 검사하지 않고 통과
             auth.requestMatchers("/auth/**").permitAll();
             // 그 외 모든 경로에 대해서는 검사하겠다.
