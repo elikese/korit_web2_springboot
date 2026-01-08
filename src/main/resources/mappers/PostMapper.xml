@@ -75,7 +75,7 @@ resultMap으로 지정해주면 됩니다.) -> interface의 시그니처를 따�
 
     <select id="searchDetailPosts" resultMap="postMap">
         select
-            id,
+            post_id,
             title,
             content
         from
@@ -89,7 +89,7 @@ resultMap으로 지정해주면 됩니다.) -> interface의 시그니처를 따�
                 and content like CONCAT('%', #{contentKeyword}, '%')
             </if>
         order by
-            id
+            post_id
     </select>
 
     <select id="findPostWithComments" resultMap="postMap">

@@ -77,7 +77,7 @@ public class SecurityConfig {
 
 
         // 요청을 보내는 쪽의 Req, Res 헤더 정보에 대한 제한 모두 허용
-        cors.addAllowedHeader("Authentication");
+        cors.addAllowedHeader("Authorization");
         cors.addAllowedHeader("Content-Type");
 
         // 요청 보내는 쪽의 메서드(get, post...) 모두 허용

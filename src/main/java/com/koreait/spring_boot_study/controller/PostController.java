@@ -97,7 +97,7 @@ public class PostController {
     ) {
         SearchPostReqDto dto
                 = new SearchPostReqDto(titleKeyword, contentKeyword);
-
+        System.out.println(dto);
         return ResponseEntity.ok(postService.searchDetailPosts(dto));
     }
 
